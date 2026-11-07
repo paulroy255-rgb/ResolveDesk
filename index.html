@@ -1,0 +1,147 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ResolveDesk - Your Voice Matters</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f5f7fb;color:#18243a}
+header{background:#102b50;color:white;padding:22px;text-align:center}
+header h1{margin:0;font-size:30px}
+header p{color:#cbd8eb}
+main{max-width:650px;margin:30px auto;padding:20px}
+.card{background:white;padding:25px;border-radius:15px;box-shadow:0 5px 25px #0001}
+h2{color:#173b68}
+label{display:block;margin-top:16px;font-weight:bold}
+input,textarea,select{width:100%;padding:13px;margin-top:7px;border:1px solid #ccd4df;border-radius:8px;font-size:16px}
+textarea{min-height:100px;resize:vertical}
+button{width:100%;padding:15px;margin-top:20px;border:0;border-radius:8px;background:#1768d1;color:white;font-size:16px;font-weight:bold}
+button.secondary{background:#173b68}
+#result{display:none;margin-top:25px}
+#output{white-space:pre-wrap;background:#f1f5fa;padding:15px;border-radius:8px;line-height:1.6}
+footer{text-align:center;padding:25px;color:#65738a;font-size:13px}
+</style>
+</head>
+<body>
+<header>
+<h1>ResolveDesk</h1>
+<p>Your problem deserves to be heard.</p>
+</header>
+
+<main>
+<div class="card">
+<h2>Write Your Complaint</h2>
+<p>Tell us what happened. We'll help you prepare a clear, professional complaint letter.</p>
+
+<label>Company or service name</label>
+<input id="company" placeholder="e.g. Your bank or mobile operator">
+
+<label>Complaint category</label>
+<select id="category">
+<option>Banking</option>
+<option>Shopping</option>
+<option>Telecom</option>
+<option>Insurance</option>
+<option>Travel</option>
+<option>Government service</option>
+<option>Other</option>
+</select>
+
+<label>What happened?</label>
+<textarea id="issue" placeholder="Explain your problem in simple words..."></textarea>
+
+<label>When did it happen?</label>
+<input id="date" type="date">
+
+<label>What solution do you want?</label>
+<textarea id="solution" placeholder="e.g. Refund, replacement, correction or resolution"></textarea>
+
+<label>Your name (optional)</label>
+<input id="person" placeholder="Your name">
+
+<button onclick="generate()">Generate My Complaint</button>
+
+<div id="result">
+<h2>Your Complaint Draft</h2>
+<div id="output"></div>
+<button class="secondary" onclick="copyText()">Copy Complaint</button>
+<button class="secondary" onclick="downloadText()">Download Complaint</button>
+</div>
+</div>
+</main>
+
+<footer>
+ResolveDesk | Helping people communicate their problems clearly.
+<br><br>
+Your information stays in this browser. Do not enter passwords, OTPs or banking PINs.
+</footer>
+
+<script>
+function generate(){
+const company=document.getElementById('company').value.trim();
+const category=document.getElementById('category').value;
+const issue=document.getElementById('issue').value.trim();
+const date=document.getElementById('date').value;
+const solution=document.getElementById('solution').value.trim();
+const person=document.getElementById('person').value.trim();
+
+if(!company||!issue||!solution){
+alert('Please fill in the company, problem and desired solution.');
+return;
+}
+
+const letter=`Subject: Formal Complaint Regarding ${category}
+
+To,
+The Customer Support Team,
+${company}
+
+Dear Sir/Madam,
+
+I am writing to formally raise a complaint regarding an issue with your service.
+
+Details of my complaint:
+${issue}
+
+Date of incident: ${date||'Not specified'}
+
+I request you to kindly investigate this matter and take appropriate action.
+
+My requested resolution:
+${solution}
+
+I would appreciate a written response and a resolution at the earliest possible time.
+
+Thank you for your attention.
+
+Sincerely,
+${person||'Customer'}`;
+
+document.getElementById('output').textContent=letter;
+document.getElementById('result').style.display='block';
+}
+
+function copyText(){
+const text=document.getElementById('output').textContent;
+if(navigator.clipboard){
+navigator.clipboard.writeText(text).then(()=>alert('Complaint copied!'));
+}else{
+alert('Please select and copy the complaint text.');
+}
+}
+
+function downloadText(){
+const text=document.getElementById('output').textContent;
+const file=new Blob([text],{type:'text/plain'});
+const url=URL.createObjectURL(file);
+const a=document.createElement('a');
+a.href=url;
+a.download='ResolveDesk-Complaint.txt';
+a.click();
+URL.revokeObjectURL(url);
+}
+</script>
+</body>
+</html>
